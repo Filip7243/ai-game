@@ -1,27 +1,45 @@
 package org.example;
 
-import java.util.Collection;
-import java.util.Collections;
+public class Board implements Playable {
 
-public class Board {
+    private final BoardCurrentStateChecker STATE_CHECKER = new BoardCurrentStateChecker(this);
+    private static final Character[][] BOARD = new Character[4][4];
+    private static final char MARK = 'X';
 
-    private static final Character[][] board = new Character[4][4];
+    @Override
+    public void makeMove(int x, int y) {
+        if (!isMarkPlaced(x, y) && !isGameOver()) {
+            BOARD[x][y] = MARK;
+        } else {
+            throw new IllegalArgumentException("Illegal move! " + x + " " + y);
+        }
+    }
+
+    @Override
+    public boolean isMarkPlaced(int x, int y) {
+        return BOARD[x][y] != null;
+    }
+
+    @Override
+    public boolean isGameOver() {
+        return STATE_CHECKER.checkHorizontals() || STATE_CHECKER.checkVerticals();
+    }
 
     public Character[][] getBoard() {
         Character[][] boardCopy = new Character[4][4];
-        System.arraycopy(board, 0, boardCopy, 0, 4);
+        System.arraycopy(BOARD, 0, boardCopy, 0, 4);
 
         return boardCopy;
     }
 
     public void printBoard() {
         System.out.print("   1   2   3   4 \n");
-        for (int i = 0; i < board.length; i++) {
+        for (int i = 0; i < BOARD.length; i++) {
             System.out.print(i + 1);
 
-            for (int j = 0; j < board[i].length; j++) {
-                String xOnPosition = board[i][j] == null ? " " : board[i][j].toString();
-                System.out.print(" [" + xOnPosition + "]");
+            for (int j = 0; j < BOARD[i].length; j++) {
+                String markOnCurrentPosition = BOARD[i][j] == null ? " " : BOARD[i][j].toString();
+                System.out.print(" [" + markOnCurrentPosition + "]");
             }
             System.out.println();
         }
