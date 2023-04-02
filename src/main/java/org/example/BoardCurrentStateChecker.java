@@ -8,7 +8,7 @@ public class BoardCurrentStateChecker {
         this.board = board;
     }
 
-    public boolean checkHorizontals() {
+    public int checkHorizontals() {
         int horizontalCounter = 0;
 
         for (int i = 0; i < board.getBoard().length; i++) {
@@ -25,10 +25,10 @@ public class BoardCurrentStateChecker {
             }
         }
 
-        return horizontalCounter == 4;
+        return horizontalCounter;
     }
 
-    public boolean checkVerticals() {
+    public int checkVerticals() {
         int verticalCounter = 0;
 
         for (int i = 0; i < board.getBoard().length; i++) {
@@ -47,6 +47,32 @@ public class BoardCurrentStateChecker {
             }
         }
 
-        return verticalCounter == 4;
+        return verticalCounter;
+    }
+
+    public int checkTopLeftLowRightCross() {
+        int crossCounter = 0;
+
+        for (int i = 0; i < board.getBoard().length; i++) {
+            if (board.isMarkPlaced(i, i)) {
+                crossCounter++;
+            }
+        }
+
+        return crossCounter;
+    }
+
+    public int checkLowLeftTopRightCross() {
+        int crossCounter = 0;
+        int boardLength = board.getBoard().length;
+
+        for (int i = 0; i < board.getBoard().length; i++) {
+            if (board.isMarkPlaced(boardLength - 1, i)) {
+                crossCounter++;
+                boardLength--;
+            }
+        }
+
+        return crossCounter;
     }
 }
