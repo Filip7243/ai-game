@@ -22,7 +22,18 @@ public class Board implements Playable {
 
     @Override
     public boolean isGameOver() {
-        return STATE_CHECKER.checkHorizontals() || STATE_CHECKER.checkVerticals();
+        // TODO: check who did last move
+        return STATE_CHECKER.checkHorizontals() == 4 || STATE_CHECKER.checkVerticals() == 4 ||
+               STATE_CHECKER.checkTopLeftLowRightCross() == 4 || STATE_CHECKER.checkLowLeftTopRightCross() == 4;
+    }
+
+    @Override
+    public void undoMove(int x, int y) {
+        if (isMarkPlaced(x, y)) {
+            GAME_BOARD[x][y] = null;
+        } else {
+            throw new IllegalArgumentException("Can't undo move, because no mark placed!");
+        }
     }
 
     public Character[][] getBoard() {
