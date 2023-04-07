@@ -8,52 +8,47 @@ public class BoardCurrentStateChecker {
         this.board = board;
     }
 
-    public int checkHorizontals() {
+    public int[] checkHorizontals() {
         int horizontalCounter = 0;
+        int boardWidth = board.getBoardWidth();
+        int[] resultForHorizontals = new int[boardWidth];
 
-        for (int i = 0; i < board.getBoard().length; i++) {
-            for (int j = 0; j < board.getBoard()[i].length; j++) {
+        for (int i = 0; i < boardWidth; i++) {
+            for (int j = 0; j < boardWidth; j++) {
                 if (board.isMarkPlaced(i, j)) {
                     horizontalCounter++;
                 }
             }
 
-            if (horizontalCounter == 4) {
-                break;
-            } else {
-                horizontalCounter = 0;
-            }
+            resultForHorizontals[i] = horizontalCounter;
+            horizontalCounter = 0;
         }
 
-        return horizontalCounter;
+        return resultForHorizontals;
     }
 
-    public int checkVerticals() {
+    public int[] checkVerticals() {
         int verticalCounter = 0;
+        int boardWidth = board.getBoardWidth();
+        int[] resultForColumns = new int[boardWidth];
 
-        for (int i = 0; i < board.getBoard().length; i++) {
-            for (int j = 0; j < board.getBoard()[i].length; j++) {
+        for (int i = 0; i < boardWidth; i++) {
+            for (int j = 0; j < boardWidth; j++) {
                 if (board.isMarkPlaced(j, i)) {
                     verticalCounter++;
                 }
-
-                if (j == 3) {
-                    if (verticalCounter == 4) {
-                        break;
-                    } else {
-                        verticalCounter = 0;
-                    }
-                }
             }
+            resultForColumns[i] = verticalCounter;
+            verticalCounter = 0;
         }
 
-        return verticalCounter;
+        return resultForColumns;
     }
 
     public int checkTopLeftLowRightCross() {
         int crossCounter = 0;
 
-        for (int i = 0; i < board.getBoard().length; i++) {
+        for (int i = 0; i < board.getBoardWidth(); i++) {
             if (board.isMarkPlaced(i, i)) {
                 crossCounter++;
             }
@@ -64,12 +59,12 @@ public class BoardCurrentStateChecker {
 
     public int checkLowLeftTopRightCross() {
         int crossCounter = 0;
-        int boardLength = board.getBoard().length;
+        int boardWidth = board.getBoardWidth();
 
-        for (int i = 0; i < board.getBoard().length; i++) {
-            if (board.isMarkPlaced(boardLength - 1, i)) {
+        for (int i = 0; i < boardWidth; i++) {
+            if (board.isMarkPlaced(boardWidth - 1, i)) {
                 crossCounter++;
-                boardLength--;
+                boardWidth--;
             }
         }
 
