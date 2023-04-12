@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.Arrays;
+
 public class Board implements Playable {
 
     private static final int BOARD_WIDTH = 4;
@@ -9,7 +11,7 @@ public class Board implements Playable {
 
     @Override
     public void makeMove(int x, int y) {
-        if (!isMarkPlaced(x, y) && !isGameOver()) {
+        if (!isMarkPlaced(x, y)) {
             GAME_BOARD[x][y] = MARK;
         } else {
             System.out.println("IS AMRKED PLACED = " + isMarkPlaced(x, y));
@@ -36,6 +38,7 @@ public class Board implements Playable {
                 return true;
             }
         }
+
         return STATE_CHECKER.checkTopLeftLowRightCross() == BOARD_WIDTH || STATE_CHECKER.checkLowLeftTopRightCross() == BOARD_WIDTH;
     }
 
