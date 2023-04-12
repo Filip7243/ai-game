@@ -139,12 +139,12 @@ public class Computer implements AI {
 
         int lowDiagonal = stateChecker.checkLowLeftTopRightCross();
         if (lowDiagonal == boardWidth - 1) {
-            value++;
+            value += 2;
         }
 
         int highDiagonal = stateChecker.checkTopLeftLowRightCross();
         if (highDiagonal == boardWidth - 1) {
-            value++;
+            value += 2;
         }
 
         return value;
