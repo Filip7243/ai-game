@@ -7,7 +7,6 @@ public class Game {
     private Board board;
     private Computer computer;
     private static Scanner scanner = new Scanner(System.in);
-    private BoardCurrentStateChecker bc;
 
     public Game(Board board) {
         this.board = board;
@@ -16,35 +15,61 @@ public class Game {
     }
 
     private void play() {
-        boolean flag = true;
+        System.out.println("Choose who is starting (C, P):");
+        String startingPlayer = scanner.nextLine();
 
-        while (flag) {
-            if (!board.isGameOver()) {
-                int[] bestMove = computer.findBestMove(board);
-                board.makeMove(bestMove[0], bestMove[1]);
-                System.out.println("CURRENT STATE = " + computer.getCurrentStateOfBoard(board));
-                if (board.isGameOver()) {
-                    System.out.println("ESSUNIA ZIOMEK KOMP (i, j) = " + bestMove[0] + " " + bestMove[1]);
-                    board.printBoard();
-                    break;
-                }
-                board.printBoard();
+        switch (startingPlayer) {
+            case "C" -> {
+                while (true) {
+                    computerPlays();
+                    if (board.isGameOver()) {
+                        board.printBoard();
+                        System.out.println("COMPUTER LOSE");
+                        break;
+                    }
 
-                System.out.print("Make a move (coords separated by comma): ");
-                String move = scanner.nextLine();
-                String[] moves = move.split(",");
-                board.makeMove(Integer.parseInt(moves[0]), Integer.parseInt(moves[1]));
-                if (board.isGameOver()) {
-                    System.out.println("ESSUNIA ZIOMEK PLAYER");
                     board.printBoard();
-                    break;
+
+                    playerPlays();
+                    if (board.isGameOver()) {
+                        board.printBoard();
+                        System.out.println("YOU LOSE!");
+                        break;
+                    }
                 }
-            } else {
-                board.printBoard();
-                flag = false;
-                System.out.println("GAME OVER!");
             }
+            case "P" -> {
+                while (true) {
+                    board.printBoard();
+                    playerPlays();
+                    if (board.isGameOver()) {
+                        board.printBoard();
+                        System.out.println("YOU LOSE!");
+                        break;
+                    }
 
+                    computerPlays();
+                    if (board.isGameOver()) {
+                        board.printBoard();
+                        System.out.println("COMPUTER LOSE");
+                        break;
+                    }
+                }
+            }
         }
+
+
+    }
+
+    private void computerPlays() {
+        int[] bestMove = computer.findBestMove(board);
+        board.makeMove(bestMove[0], bestMove[1]);
+    }
+
+    private void playerPlays() {
+        System.out.print("Make a move (coords separated by comma): ");
+        String move = scanner.nextLine();
+        String[] moves = move.split(",");
+        board.makeMove(Integer.parseInt(moves[0]), Integer.parseInt(moves[1]));
     }
 }
