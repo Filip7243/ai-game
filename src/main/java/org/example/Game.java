@@ -22,7 +22,7 @@ public class Game {
             if (!board.isGameOver()) {
                 int[] bestMove = computer.findBestMove(board);
                 board.makeMove(bestMove[0], bestMove[1]);
-                System.out.println(computer.getCurrentStateOfBoard(board));
+                System.out.println("CURRENT STATE = " + computer.getCurrentStateOfBoard(board));
                 if (board.isGameOver()) {
                     System.out.println("ESSUNIA ZIOMEK KOMP (i, j) = " + bestMove[0] + " " + bestMove[1]);
                     board.printBoard();
@@ -39,7 +39,6 @@ public class Game {
                     board.printBoard();
                     break;
                 }
-
             } else {
                 board.printBoard();
                 flag = false;
