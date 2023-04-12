@@ -18,7 +18,7 @@ public class Game {
         System.out.println("Choose who is starting (C, P):");
         String startingPlayer = scanner.nextLine();
 
-        switch (startingPlayer) {
+        switch (startingPlayer.toUpperCase()) {
             case "C" -> {
                 while (true) {
                     computerPlays();
