@@ -12,7 +12,7 @@ public class Computer implements AI {
             for (int j = 0; j < boardWidth; j++) {
                 if (!board.isMarkPlaced(i, j)) {
                     board.makeMove(i, j);
-                    int valueAfterMove = minMaxAlphaBeta(board, 5, true, Integer.MIN_VALUE, Integer.MAX_VALUE);
+                    int valueAfterMove = minMaxAlphaBeta(board, 6, true, Integer.MIN_VALUE, Integer.MAX_VALUE);
 //                    int valueAfterMove = minMax(board, 4, true);
                     board.undoMove(i, j);
                     if (valueAfterMove > bestValue) {
@@ -72,6 +72,7 @@ public class Computer implements AI {
     public int minMaxAlphaBeta(Board board, int depth, boolean isMax, int alpha, int beta) {
         int currentStateOfBoard = getCurrentStateOfBoard(board);
 
+
         if (depth == 0 || board.isGameOver()) {
             return currentStateOfBoard;
         }
@@ -84,10 +85,10 @@ public class Computer implements AI {
                 for (int j = 0; j < boardWidth; j++) {
                     if (!board.isMarkPlaced(i, j)) {
                         board.makeMove(i, j);
-                        bestValue = Math.max(bestValue, minMax(board, depth - 1, false));
+                        bestValue = Math.max(bestValue, minMaxAlphaBeta(board, depth - 1, false, alpha, beta));
                         board.undoMove(i, j);
                         alpha = Math.max(alpha, bestValue);
-                        if (alpha >= beta) {
+                        if (alpha > beta) {
                             return bestValue;
                         }
                     }
@@ -102,10 +103,10 @@ public class Computer implements AI {
                 for (int j = 0; j < boardWidth; j++) {
                     if (!board.isMarkPlaced(i, j)) {
                         board.makeMove(i, j);
-                        worstValue = Math.min(worstValue, minMax(board, depth - 1, true));
+                        worstValue = Math.min(worstValue, minMaxAlphaBeta(board, depth - 1, true, alpha, beta));
                         board.undoMove(i, j);
                         beta = Math.min(beta, worstValue);
-                        if (beta <= alpha) {
+                        if (beta < alpha) {
                             return worstValue;
                         }
                     }
