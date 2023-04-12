@@ -47,8 +47,9 @@ public class BoardCurrentStateChecker {
 
     public int checkTopLeftLowRightCross() {
         int crossCounter = 0;
+        int boardWidth = board.getBoardWidth();
 
-        for (int i = 0; i < board.getBoardWidth(); i++) {
+        for (int i = 0; i < boardWidth; i++) {
             if (board.isMarkPlaced(i, i)) {
                 crossCounter++;
             }
@@ -60,11 +61,11 @@ public class BoardCurrentStateChecker {
     public int checkLowLeftTopRightCross() {
         int crossCounter = 0;
         int boardWidth = board.getBoardWidth();
+        int temp = boardWidth;
 
         for (int i = 0; i < boardWidth; i++) {
-            if (board.isMarkPlaced(boardWidth - 1, i)) {
+            if (board.isMarkPlaced(--temp, i)) {
                 crossCounter++;
-                boardWidth--;
             }
         }
 
