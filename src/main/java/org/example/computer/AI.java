@@ -1,4 +1,6 @@
-package org.example;
+package org.example.computer;
+
+import org.example.board.Board;
 
 public interface AI {
 

@@ -1,5 +1,8 @@
 package org.example;
 
+import org.example.board.Board;
+import org.example.computer.Computer;
+
 import java.util.Scanner;
 
 public class Game {

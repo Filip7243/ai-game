@@ -1,4 +1,8 @@
-package org.example;
+package org.example.computer;
+
+import org.example.Game;
+import org.example.board.Board;
+import org.example.board.BoardCurrentStateChecker;
 
 import java.util.List;
 

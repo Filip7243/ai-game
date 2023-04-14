@@ -1,4 +1,6 @@
-package org.example;
+package org.example.board;
+
+import org.example.Game;
 
 import java.util.List;
 
