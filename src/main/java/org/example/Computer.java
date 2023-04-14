@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.List;
+
 public class Computer implements AI {
 
     @Override
@@ -12,7 +14,7 @@ public class Computer implements AI {
             for (int j = 0; j < boardWidth; j++) {
                 if (!board.isMarkPlaced(i, j)) {
                     board.makeMove(i, j);
-                    int valueAfterMove = minMaxAlphaBeta(board, 6, true, Integer.MIN_VALUE, Integer.MAX_VALUE);
+                    int valueAfterMove = minMaxAlphaBeta(board, 16, false, Integer.MIN_VALUE, Integer.MAX_VALUE);
 //                    int valueAfterMove = minMax(board, 4, true);
                     board.undoMove(i, j);
                     if (valueAfterMove > bestValue) {
@@ -22,6 +24,7 @@ public class Computer implements AI {
                         bestValue = valueAfterMove;
                     }
                 }
+                System.out.println("BEST VALUE = " + bestValue + ", BEST COORDS(x,y) = " + i + ", " + j);
             }
         }
 
@@ -30,7 +33,7 @@ public class Computer implements AI {
 
     @Override
     public int minMax(Board board, int depth, boolean isMax) {
-        int currentStateOfBoard = getCurrentStateOfBoard(board);
+        int currentStateOfBoard = getCurrentStateOfBoard(board, isMax);
 
         if (depth == 0 || board.isGameOver()) {
             return currentStateOfBoard;
@@ -70,11 +73,8 @@ public class Computer implements AI {
 
     @Override
     public int minMaxAlphaBeta(Board board, int depth, boolean isMax, int alpha, int beta) {
-        int currentStateOfBoard = getCurrentStateOfBoard(board);
-
-
-        if (depth == 0 || board.isGameOver()) {
-            return currentStateOfBoard;
+        if (board.isGameOver()) {
+            return Game.currentPlayer.equalsIgnoreCase("p") ? -100 + (16 - depth) : 100 - (16 - depth);
         }
 
         int boardWidth = board.getBoardWidth();
@@ -88,8 +88,8 @@ public class Computer implements AI {
                         bestValue = Math.max(bestValue, minMaxAlphaBeta(board, depth - 1, false, alpha, beta));
                         board.undoMove(i, j);
                         alpha = Math.max(alpha, bestValue);
-                        if (alpha > beta) {
-                            return bestValue;
+                        if (alpha >= beta) {
+                            break;
                         }
                     }
                 }
@@ -106,8 +106,8 @@ public class Computer implements AI {
                         worstValue = Math.min(worstValue, minMaxAlphaBeta(board, depth - 1, true, alpha, beta));
                         board.undoMove(i, j);
                         beta = Math.min(beta, worstValue);
-                        if (beta < alpha) {
-                            return worstValue;
+                        if (beta <= alpha) {
+                            break;
                         }
                     }
                 }
@@ -118,24 +118,21 @@ public class Computer implements AI {
     }
 
     @Override
-    public int getCurrentStateOfBoard(Board currentBoardState) {
+    public int getCurrentStateOfBoard(Board currentBoardState, boolean isMax) {
         BoardCurrentStateChecker stateChecker = new BoardCurrentStateChecker(currentBoardState);
         int boardWidth = currentBoardState.getBoardWidth();
         int value = 0;
+        String startingPlayer = Game.currentPlayer;
 
-        int[] horizontals = stateChecker.checkHorizontals();
-        for (int horizontal : horizontals) {
-            if (horizontal == boardWidth - 1) {
-                value++;
-            }
-        }
+        List<Integer> horizontals = stateChecker.checkHorizontals();
+        value += horizontals.stream()
+                .filter(horizontal -> horizontal == 3)
+                .count();
 
-        int[] verticals = stateChecker.checkVerticals();
-        for (int vertical : verticals) {
-            if (vertical == boardWidth - 1) {
-                value++;
-            }
-        }
+        List<Integer> verticals = stateChecker.checkVerticals();
+        value += verticals.stream()
+                .filter(horizontal -> horizontal == 3)
+                .count();
 
         int lowDiagonal = stateChecker.checkLowLeftTopRightCross();
         if (lowDiagonal == boardWidth - 1) {
@@ -145,6 +142,33 @@ public class Computer implements AI {
         int highDiagonal = stateChecker.checkTopLeftLowRightCross();
         if (highDiagonal == boardWidth - 1) {
             value += 2;
+        }
+
+
+        if (isMax && startingPlayer.equalsIgnoreCase("C")) { // Computer is on move
+            if (horizontals.contains(boardWidth) || verticals.contains(boardWidth) ||
+                    lowDiagonal == boardWidth || highDiagonal == boardWidth) {
+                return -100;
+            }
+            return value;
+        } else if (isMax && startingPlayer.equalsIgnoreCase("P")) { // Player on move
+            if (horizontals.contains(boardWidth) || verticals.contains(boardWidth) ||
+                    lowDiagonal == boardWidth || highDiagonal == boardWidth) {
+                return 100;
+            }
+            return value;
+        } else if (!isMax && startingPlayer.equalsIgnoreCase("C")) { // Player on move
+            if (horizontals.contains(boardWidth) || verticals.contains(boardWidth) ||
+                    lowDiagonal == boardWidth || highDiagonal == boardWidth) {
+                return 100;
+            }
+            return -value;
+        } else if (!isMax && startingPlayer.equalsIgnoreCase("P")) { // Computer on Move
+            if (horizontals.contains(boardWidth) || verticals.contains(boardWidth) ||
+                    lowDiagonal == boardWidth || highDiagonal == boardWidth) {
+                return -100;
+            }
+            return -value;
         }
 
         return value;
