@@ -1,5 +1,8 @@
 package org.example;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BoardCurrentStateChecker {
 
     private Board board;
@@ -8,10 +11,10 @@ public class BoardCurrentStateChecker {
         this.board = board;
     }
 
-    public int[] checkHorizontals() {
+    public List<Integer> checkHorizontals() {
         int horizontalCounter = 0;
         int boardWidth = board.getBoardWidth();
-        int[] resultForHorizontals = new int[boardWidth];
+        List<Integer> resultForHorizontals = new ArrayList<>(boardWidth);
 
         for (int i = 0; i < boardWidth; i++) {
             for (int j = 0; j < boardWidth; j++) {
@@ -20,17 +23,17 @@ public class BoardCurrentStateChecker {
                 }
             }
 
-            resultForHorizontals[i] = horizontalCounter;
+            resultForHorizontals.add(horizontalCounter);
             horizontalCounter = 0;
         }
 
         return resultForHorizontals;
     }
 
-    public int[] checkVerticals() {
+    public List<Integer> checkVerticals() {
         int verticalCounter = 0;
         int boardWidth = board.getBoardWidth();
-        int[] resultForColumns = new int[boardWidth];
+        List<Integer> resultForColumns = new ArrayList<>(boardWidth);
 
         for (int i = 0; i < boardWidth; i++) {
             for (int j = 0; j < boardWidth; j++) {
@@ -38,7 +41,8 @@ public class BoardCurrentStateChecker {
                     verticalCounter++;
                 }
             }
-            resultForColumns[i] = verticalCounter;
+
+            resultForColumns.add(verticalCounter);
             verticalCounter = 0;
         }
 
