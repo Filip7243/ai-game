@@ -1,6 +1,6 @@
 package org.example;
 
-import java.util.Arrays;
+import java.util.List;
 
 public class Board implements Playable {
 
@@ -14,10 +14,13 @@ public class Board implements Playable {
         if (!isMarkPlaced(x, y)) {
             GAME_BOARD[x][y] = MARK;
         } else {
-            System.out.println("IS AMRKED PLACED = " + isMarkPlaced(x, y));
-            System.out.println(GAME_BOARD[x][y]);
-            System.out.println("IS GAME OVER = " + isGameOver());
             throw new IllegalArgumentException("Illegal move! " + x + " " + y);
+        }
+
+        if (Game.currentPlayer.equalsIgnoreCase("p")) {
+            Game.currentPlayer = "C";
+        } else if (Game.currentPlayer.equalsIgnoreCase("c")) {
+            Game.currentPlayer = "P";
         }
     }
 
@@ -28,15 +31,10 @@ public class Board implements Playable {
 
     @Override
     public boolean isGameOver() {
-        // TODO: check who did last move
-
-        int[] horizontals = STATE_CHECKER.checkHorizontals();
-        int[] verticals = STATE_CHECKER.checkVerticals();
-
-        for (int i = 0; i < horizontals.length; i++) {
-            if (horizontals[i] == BOARD_WIDTH || verticals[i] == BOARD_WIDTH) {
-                return true;
-            }
+        List<Integer> horizontals = STATE_CHECKER.checkHorizontals();
+        List<Integer> verticals = STATE_CHECKER.checkVerticals();
+        if (horizontals.contains(BOARD_WIDTH) || verticals.contains(BOARD_WIDTH)) {
+            return true;
         }
 
         return STATE_CHECKER.checkTopLeftLowRightCross() == BOARD_WIDTH || STATE_CHECKER.checkLowLeftTopRightCross() == BOARD_WIDTH;
@@ -48,6 +46,12 @@ public class Board implements Playable {
             GAME_BOARD[x][y] = null;
         } else {
             throw new IllegalArgumentException("Can't undo move, because no mark placed!");
+        }
+
+        if (Game.currentPlayer.equalsIgnoreCase("p")) {
+            Game.currentPlayer = "C";
+        } else if (Game.currentPlayer.equalsIgnoreCase("c")) {
+            Game.currentPlayer = "P";
         }
     }
 
