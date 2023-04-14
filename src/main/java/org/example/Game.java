@@ -7,6 +7,7 @@ public class Game {
     private Board board;
     private Computer computer;
     private static Scanner scanner = new Scanner(System.in);
+    public static String currentPlayer;
 
     public Game(Board board) {
         this.board = board;
@@ -17,6 +18,7 @@ public class Game {
     private void play() {
         System.out.println("Choose who is starting (C, P):");
         String startingPlayer = scanner.nextLine();
+        Game.currentPlayer = startingPlayer;
 
         switch (startingPlayer.toUpperCase()) {
             case "C" -> {
