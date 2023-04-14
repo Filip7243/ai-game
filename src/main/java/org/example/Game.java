@@ -4,9 +4,9 @@ import java.util.Scanner;
 
 public class Game {
 
-    private Board board;
-    private Computer computer;
-    private static Scanner scanner = new Scanner(System.in);
+    private final Board board;
+    private final Computer computer;
+    private static final Scanner scanner = new Scanner(System.in);
     public static String currentPlayer;
 
     public Game(Board board) {

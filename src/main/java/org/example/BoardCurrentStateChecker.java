@@ -5,7 +5,7 @@ import java.util.List;
 
 public class BoardCurrentStateChecker {
 
-    private Board board;
+    private final Board board;
 
     public BoardCurrentStateChecker(Board board) {
         this.board = board;

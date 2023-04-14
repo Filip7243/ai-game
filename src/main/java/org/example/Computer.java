@@ -15,7 +15,6 @@ public class Computer implements AI {
                 if (!board.isMarkPlaced(i, j)) {
                     board.makeMove(i, j);
                     int valueAfterMove = minMaxAlphaBeta(board, 16, false, Integer.MIN_VALUE, Integer.MAX_VALUE);
-//                    int valueAfterMove = minMax(board, 4, true);
                     board.undoMove(i, j);
                     if (valueAfterMove > bestValue) {
                         bestMoveCoordinates[0] = i;
@@ -33,10 +32,8 @@ public class Computer implements AI {
 
     @Override
     public int minMax(Board board, int depth, boolean isMax) {
-        int currentStateOfBoard = getCurrentStateOfBoard(board, isMax);
-
-        if (depth == 0 || board.isGameOver()) {
-            return currentStateOfBoard;
+        if (board.isGameOver()) {
+            return Game.currentPlayer.equalsIgnoreCase("p") ? -100 + (16 - depth) : 100 - (16 - depth);
         }
 
         int boardWidth = board.getBoardWidth();
@@ -117,6 +114,7 @@ public class Computer implements AI {
         }
     }
 
+    // TODO: improve heuristic and implement it
     @Override
     public int getCurrentStateOfBoard(Board currentBoardState, boolean isMax) {
         BoardCurrentStateChecker stateChecker = new BoardCurrentStateChecker(currentBoardState);
