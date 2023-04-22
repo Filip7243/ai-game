@@ -4,6 +4,7 @@ import org.example.Game;
 import org.example.board.Board;
 import org.example.board.BoardCurrentStateChecker;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Computer implements AI {
@@ -78,44 +79,71 @@ public class Computer implements AI {
             return Game.currentPlayer.equalsIgnoreCase("p") ? -100 + (16 - depth) : 100 - (16 - depth);
         }
 
+        // implementation for university project
+        List<Integer> results = new ArrayList<>();
         int boardWidth = board.getBoardWidth();
-        if (isMax) {
-            int bestValue = Integer.MIN_VALUE;
-
-            for (int i = 0; i < boardWidth; i++) {
-                for (int j = 0; j < boardWidth; j++) {
-                    if (!board.isMarkPlaced(i, j)) {
-                        board.makeMove(i, j);
-                        bestValue = Math.max(bestValue, minMaxAlphaBeta(board, depth - 1, false, alpha, beta));
-                        board.undoMove(i, j);
-                        alpha = Math.max(alpha, bestValue);
-                        if (alpha >= beta) {
-                            break;
-                        }
+        for (int i = 0; i < boardWidth; i++) {
+            for (int j = 0; j < boardWidth; j++) {
+                if (!board.isMarkPlaced(i, j)) {
+                    board.makeMove(i, j);
+                    results.add(minMaxAlphaBeta(board, depth - 1, !isMax, alpha, beta));
+                    board.undoMove(i, j);
+                    if (isMax) {
+                        alpha = Math.max(alpha, results.stream().mapToInt(r -> r).max().orElseThrow());
+                    } else {
+                        beta = Math.min(beta, results.stream().mapToInt(r -> r).min().orElseThrow());
+                    }
+                    if (alpha >= beta) {
+                        break;
                     }
                 }
             }
-
-            return bestValue;
-        } else {
-            int worstValue = Integer.MAX_VALUE;
-
-            for (int i = 0; i < boardWidth; i++) {
-                for (int j = 0; j < boardWidth; j++) {
-                    if (!board.isMarkPlaced(i, j)) {
-                        board.makeMove(i, j);
-                        worstValue = Math.min(worstValue, minMaxAlphaBeta(board, depth - 1, true, alpha, beta));
-                        board.undoMove(i, j);
-                        beta = Math.min(beta, worstValue);
-                        if (beta <= alpha) {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            return worstValue;
         }
+
+        if (isMax) {
+            return results.stream().mapToInt(r -> r).max().orElseThrow();
+        } else {
+            return results.stream().mapToInt(r -> r).min().orElseThrow();
+        }
+
+        // old implementation
+//        if (isMax) {
+//            int bestValue = Integer.MIN_VALUE;
+//
+//            for (int i = 0; i < boardWidth; i++) {
+//                for (int j = 0; j < boardWidth; j++) {
+//                    if (!board.isMarkPlaced(i, j)) {
+//                        board.makeMove(i, j);
+//                        bestValue = Math.max(bestValue, minMaxAlphaBeta(board, depth - 1, false, alpha, beta));
+//                        board.undoMove(i, j);
+//                        alpha = Math.max(alpha, bestValue);
+//                        if (alpha >= beta) {
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//
+//            return bestValue;
+//        } else {
+//            int worstValue = Integer.MAX_VALUE;
+//
+//            for (int i = 0; i < boardWidth; i++) {
+//                for (int j = 0; j < boardWidth; j++) {
+//                    if (!board.isMarkPlaced(i, j)) {
+//                        board.makeMove(i, j);
+//                        worstValue = Math.min(worstValue, minMaxAlphaBeta(board, depth - 1, true, alpha, beta));
+//                        board.undoMove(i, j);
+//                        beta = Math.min(beta, worstValue);
+//                        if (beta <= alpha) {
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//
+//            return worstValue;
+//        }
     }
 
     // TODO: improve heuristic and implement it
